@@ -36,11 +36,11 @@ public class SearchContactsController {
                             content = {@Content(mediaType = "application/json")})
             })
     @GetMapping("/contacts/search")
-    ResponseEntity<ContactsDTO> searchByPage(@ModelAttribute final ContactFiltersDTO filters, @ModelAttribute PageRequest page) {
+    ContactsDTO searchByPage(@ModelAttribute final ContactFiltersDTO filters, @ModelAttribute PageRequest page) {
 
         int total = searchContacts.count(filters.getName(), filters.getPhone());
         final Contacts contacts = searchContacts.search(filters.getName(), filters.getPhone(), Page.of(page.getPage(), page.getOffset()));
 
-        return ResponseEntity.ok(new ContactsDTO(contacts.getContacts().stream().map(mapper::map).collect(Collectors.toList()), page.getPage(), total));
+        return new ContactsDTO(contacts.getContacts().stream().map(mapper::map).collect(Collectors.toList()), page.getPage(), total);
     }
 }
